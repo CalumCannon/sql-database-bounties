@@ -19,16 +19,18 @@ bounty1.save()
 
 bounty2.save()
 
-# bounty2.delete()
-
 bounty1.home_world = ""
-
 bounty1.update()
 
 find_by_name = Bounty.find_by_name('Blorgarg the Destroyer');
-# find_by_id = Bounty.find_by_id('2');
+find_by_id = Bounty.find_by_id('2');
 
- # p find_by_id
+p find_by_id
 p find_by_name
 
+# bounty2.delete()
 # Bounty.delete_all
+
+binding.pry
+
+nil

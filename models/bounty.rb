@@ -34,6 +34,7 @@ class Bounty
         values = [@name, @home_world, @favourite_weapon, @bounty_value]
 
     # Run
+      # RETURNS AS A STRING - using to_i to convert back to INT
         @id = db.exec_prepared('save',values)[0]["id"].to_i
     # Close
     db.close
@@ -77,37 +78,51 @@ class Bounty
 
   # FIND BY NAME
   def Bounty.find_by_name(name)
+    # Connect
     db = PG.connect({dbname:'bounties',host:'localhost'})
-    # sql = "SELECT $1 FROM bounties"
-     sql = "SELECT * FROM bounties WHERE name = $1"
+
+    # Prepare SQL string
+    sql = "SELECT * FROM bounties WHERE name = $1"
     db.prepare('find_by_name',sql)
     values = [name]
-    found_bounty = db.exec_prepared('find_by_name',values)
+
+    # Run SQL
+    result = db.exec_prepared('find_by_name',values)
+
+    # Close
     db.close
-    # return found_bounty
 
-    mapped_bounty = found_bounty[0]#.map { |bounty| Bounty.new(bounty) }
+    # Select found object from array
+    bounty = result[0]
 
-     if mapped_bounty == []
+     if bounty == []
        return nil
      else
-       return mapped_bounty
+       return Bounty.new(bounty)
      end
   end
 
   # FIND BY ID
   def Bounty.find_by_id(id)
+    # Connect
     db = PG.connect({dbname:'bounties',host:'localhost'})
-    # sql = "SELECT FROM bounties WHERE id = $1"
-    sql = "SELECT $1 FROM bounties"
+
+    # Prepare
+    sql = "SELECT * FROM bounties WHERE id = $1"
     db.prepare('find_by_id',sql)
     values = [id]
-    found_bounty = db.exec_prepared('find_by_id',values)
-    db.close
 
-    # binding.pry
-    return new found_bounty
-    # return found_bounty.map { |bounty| Bounty.new(bounty) }
+    # Run
+    returned_result = db.exec_prepared('find_by_id',values)
+
+    # Close
+    db.close
+    bounty = returned_result[0]
+
+    
+
+    return new bounty
+
   end
 
 
